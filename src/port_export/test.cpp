@@ -47,9 +47,10 @@ struct source: sc_module_ext
   }
   void thread()
   {
-    for (uint32_t idx = 0; idx < 10; ++idx)
+    uint32_t idx = 0;
+    while(true)
     {
-      sc_dt::sc_unsigned u; u = idx;
+      sc_dt::sc_unsigned u; u = idx++;
       m_port->nb_write(u);
       wait(10, SC_NS);
     }
@@ -128,6 +129,6 @@ int sc_main(int argc, char** argv)
   // example. and with getters it will loose its simplicity.
   sc_module_ext::connect_modules(src, "output", dst, "input");
 
-  sc_start();
+  sc_start(100, SC_NS);
   return 0;
 }

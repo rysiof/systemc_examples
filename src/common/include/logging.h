@@ -25,13 +25,22 @@ SOFTWARE.
 #ifndef _LOGGING_H
 #define _LOGGING_H
 
+enum __log_level
+{
+    E_LOG_ERROR,
+    E_LOG_WARN,
+    E_LOG_INFO,
+    E_LOG_LOW,
+    E_LOG_DEBUG,
+};
 
-#define LOG(level, format, ...)                         \
-    do                                                  \
-    {                                                   \
-        sc_time ___temp = sc_time_stamp();              \
-        const char* t = ___temp.to_string().c_str();    \
-        printf("[%-5.5s][%-20.20s]\t" format "\n", #level, t, ##__VA_ARGS__);            \
+#define LOG(level, format, ...)                                                 \
+    do                                                                          \
+    {                                                                           \
+        (void)E_LOG_ ## level;                                                  \
+        sc_time ___temp = sc_time_stamp();                                      \
+        const char* t = ___temp.to_string().c_str();                            \
+        printf("[%-5.5s][%-20.20s]\t" format "\n",  #level, t, ##__VA_ARGS__);  \
     } while(0)
 
 
