@@ -32,6 +32,7 @@ clean_%:
 
 -include make/platform/$(PLATFORM).mk
 
+
 ifeq ($(QUIET),)
 C := $(G_CC)
 CPP := $(G_CPP)

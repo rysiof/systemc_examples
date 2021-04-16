@@ -25,7 +25,7 @@ include make/utils.mk
 # Autodetect available targets
 AVAILABLE_TARGETS_MAKEFILES = $(call rwildcard,make/target,*.mk)
 AVAILABLE_TARGETS = $(foreach T, $(AVAILABLE_TARGETS_MAKEFILES),$(T:make/target/%.mk=%))
-TARGET_LIST =$(foreach T, $(AVAILABLE_TARGETS),$(T) clean_$(T) run_$(T))
+TARGET_LIST =$(foreach T, $(AVAILABLE_TARGETS),$(T) clean_$(T) run_$(T) rebuild_$(T) rebuild_run_$(T))
 
 
 # Autodetect available platforms

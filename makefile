@@ -26,12 +26,21 @@ CFG ?= release
 PLATFORM ?= x86
 QUIET ?=
 
+.PHONY: all_%
+all_%:
+	-@make -s clean_$(@:all_%=%) -f build.mk QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
+	-@make $(@:all_%=%) -f build.mk QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
+	-@make run_$(@:all_%=%) QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
+
+.PHONY: rebuild_%
+rebuild_%:
+	@make -s clean_$(@:rebuild_%=%) -f build.mk QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
+	@make $(@:rebuild_%=%) -f build.mk QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
+
 .PHONY: clean_%
 clean_%:
 	@make -s $@ -f build.mk QUIET=$(QUIET) CFG=$(CFG) PLATFORM=$(PLATFORM)
 
-.PHONY: rebuild_%
-rebuild_%: clean_% %
 
 .PHONY: run_%
 run_%:
