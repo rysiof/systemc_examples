@@ -1,6 +1,9 @@
 # simple systemc code for educational purposes
 
-verified and tested on ubuntu for x64
+verified and tested on ubuntu for x64.
+
+available examples:
+- ``port_export`` - quick showcase of how and when to use ``sc_port`` and ``sc_export``
 
 ## preparing setup
 
