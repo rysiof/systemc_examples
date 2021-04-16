@@ -118,6 +118,14 @@ int sc_main(int argc, char** argv)
 { 
   source src("source");
   destination dst("destination");
+  // this is the reason why we introduced 'sc_module_ext' - to make out lifes
+  // a little easier. Because alternatively we would have to call:
+  // src.m_port.bind(dst.m_export);
+  // on surface it does not looks that bad. but imagine having multiple
+  // different pins and trying to figure out how to connect them. Here we can
+  // simply say 'connect "input" from dst to "output" from src'.
+  // additionally we can hide from module user m_port and m_export used in this
+  // example. and with getters it will loose its simplicity.
   sc_module_ext::connect_modules(src, "output", dst, "input");
 
   sc_start();

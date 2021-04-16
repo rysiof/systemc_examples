@@ -40,6 +40,11 @@ public:
         sc_module_ext& src, const char* src_port,
         sc_module_ext& dst, const char* dst_export);
 
+    void log_input_ports() const;
+
+    void log_output_ports() const;
+
+    void log_ports() const;
 protected:
     void register_input_port(sc_export<sc_core::sc_interface>* input_port);
 
@@ -93,6 +98,28 @@ void sc_module_ext::connect_modules(
     LOG(LOW, "dst_if = %s [%p]", dst_if->name(), dst_if);
 
     src_if->bind(*dst_if);
+}
+
+void sc_module_ext::log_ports() const
+{
+    log_input_ports();
+    log_output_ports();
+}
+
+void sc_module_ext::log_input_ports() const
+{
+    for (auto item : m_input_port_map)
+    {
+        LOG(DEBUG, "module \"%s\" has input port: \"%s\"", name(), item.first.c_str());
+    }
+}
+
+void sc_module_ext::log_output_ports() const
+{
+    for (auto item : m_output_port_map)
+    {
+        LOG(DEBUG, "module \"%s\" has output port: \"%s\"", name(), item.first.c_str());
+    }
 }
 
 void sc_module_ext::register_input_port(sc_export<sc_core::sc_interface>* input_port)
