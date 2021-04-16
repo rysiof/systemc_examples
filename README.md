@@ -8,7 +8,7 @@ available examples:
 ## preparing setup
 
 1. download and unpack systemc from https://www.accellera.org/downloads/standards/systemc 
-2. set SYSTEMC_PATH to path to systemc location
+2. set ``SYSTEMC_PATH`` to path to systemc location
 3. follow installation of systemc
 
 ## compiling source code
