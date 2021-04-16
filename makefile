@@ -23,7 +23,7 @@
 # This makefile is only command wrapper for build.mk
 
 CFG ?= release
-PLATFORM ?= x86
+PLATFORM ?= x64
 QUIET ?=
 
 .PHONY: all_%
