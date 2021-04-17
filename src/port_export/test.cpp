@@ -79,11 +79,34 @@ public:
   {
     LOG(LOW, "nb_write(%X)", value.to_uint());
     m_value = value;
+    // As this is sample code we don't care about configurability.
+    // For "pro" code you can add some parameters, runtime config etc.
     m_event.notify(1, SC_NS);
   }
 private:
   sc_event& m_event;
   sc_dt::sc_unsigned& m_value;
+};
+
+/*!
+  This structure models something that is suppose to resemble input port. In this
+  case we can imagine 'in std_logic_vector(31 downto 0)' in VHDL.
+*/
+struct input:
+  public sc_export<write_if>,
+  public write_if_impl
+{
+  /*!
+    @param event Event to be trigerred when nb_write is called from source module.
+  */
+  input(const char* name, sc_event& event):
+    sc_export<write_if>(name),
+    write_if_impl(event, m_value)
+  {
+    m_value = 0;
+    bind(*this);
+  }
+  sc_dt::sc_unsigned m_value;
 };
 
 struct destination: sc_module_ext
@@ -92,10 +115,8 @@ struct destination: sc_module_ext
 
   destination(const sc_module_name& name) :
     sc_module_ext(name),
-    m_export("input"), // note: m_port.name() will be $name + "." + "input"
-    m_if(m_event, m_value)
+    m_export("input", m_event) // note: m_port.name() will be $name + "." + "input"
   {
-    m_export.bind(m_if);
     SC_THREAD(thread);
     // need to register if we want later to utilize sc_module_ext API
     register_input_port((sc_export<sc_core::sc_interface>*)&m_export);
@@ -105,14 +126,12 @@ struct destination: sc_module_ext
     while(true)
     {
       wait(m_event);
-      LOG(LOW, "Received event in src, value is now %X", m_value.to_uint());
+      LOG(LOW, "Received event in src, value is now %X", m_export.m_value.to_uint());
     }
   }
 private:
-  sc_export<write_if> m_export;
-  write_if_impl m_if;
+  input m_export;
   sc_event m_event;
-  sc_dt::sc_unsigned m_value;
 };
 
 int sc_main(int argc, char** argv)
@@ -129,6 +148,6 @@ int sc_main(int argc, char** argv)
   // example. and with getters it will loose its simplicity.
   sc_module_ext::connect_modules(src, "output", dst, "input");
 
-  sc_start(100, SC_NS);
+  sc_start(100, SC_NS); // runs for 100 ns
   return 0;
 }

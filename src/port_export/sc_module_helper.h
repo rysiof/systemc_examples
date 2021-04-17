@@ -40,10 +40,25 @@ public:
         sc_module_ext& src, const char* src_port,
         sc_module_ext& dst, const char* dst_export);
 
+    /*!
+        Logs all registered input ports.
+
+        @note For debug purposes only.
+    */
     void log_input_ports() const;
 
+    /*!
+        Logs all registered output ports.
+
+        @note For debug purposes only.
+    */
     void log_output_ports() const;
 
+    /*!
+        Logs all registered ports (both inputs and outputs).
+
+        @note For debug purposes only.
+    */
     void log_ports() const;
 protected:
     void register_input_port(sc_export<sc_core::sc_interface>* input_port);
@@ -51,8 +66,8 @@ protected:
     void register_output_port(sc_port<sc_core::sc_interface>* output_port);
 
     /*!
-        @note   We are sadly using 'std::string' because 'const char*' might not be good suitable type
-                as key.
+        @note   We are sadly using 'std::string' because 'const char*' might
+                not be good suitable type as key.
         @note   We are using 'sc_core::sc_interface' is order to access 'bind' method.
     */
     std::map<std::string, sc_export<sc_core::sc_interface>*> m_input_port_map;
