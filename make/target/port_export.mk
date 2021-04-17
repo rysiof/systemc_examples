@@ -33,9 +33,9 @@ INCLUDE_DIRS = $(TOP)src/$(TARGET)
 INCLUDE_DIRS += $(SYSTEMC_PATH)/include  # This is to include SystemC headers
 INCLUDE_DIRS += $(TOP)src/common/include
 CFLAGS = -Wall -Werror -O3
-CXXFLAGS = $(CFLAGS)
-CPPFLAGS = $(CFLAGS)
-CCFLAGS = $(CFLAGS)
+CXXFLAGS = $(CFLAGS) -std=c++17
+CPPFLAGS = $(CFLAGS) -std=c++17
+CCFLAGS = $(CFLAGS) -std=c++17
 
 # This is to point path to libsystemc
 LDFLAGS = -L $(SYSTEMC_PATH)/lib-linux64

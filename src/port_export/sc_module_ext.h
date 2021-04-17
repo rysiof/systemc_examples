@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef SC_MODULE_HELPER_H
-#define SC_MODULE_HELPER_H
+#ifndef SC_MODULE_EXT_H
+#define SC_MODULE_EXT_H
 
 #include <systemc.h>
 #include <map>
@@ -68,7 +68,8 @@ protected:
     /*!
         @note   We are sadly using 'std::string' because 'const char*' might
                 not be good suitable type as key.
-        @note   We are using 'sc_core::sc_interface' is order to access 'bind' method.
+        @note   We are using 'sc_core::sc_interface' is order to access 'bind'
+                method.
     */
     std::map<std::string, sc_export<sc_core::sc_interface>*> m_input_port_map;
     std::map<std::string, sc_port<sc_core::sc_interface>*> m_output_port_map;
@@ -183,4 +184,4 @@ sc_export<sc_core::sc_interface>* sc_module_ext::get_export(const char* pin_name
     }
     return pair->second;
 }
-#endif // SC_MODULE_HELPER_H
+#endif // SC_MODULE_EXT_H

@@ -25,6 +25,9 @@ SOFTWARE.
 #ifndef _LOGGING_H
 #define _LOGGING_H
 
+#include <stdio.h>
+#include <systemc.h>
+
 enum __log_level
 {
     E_LOG_ERROR,
@@ -34,6 +37,12 @@ enum __log_level
     E_LOG_DEBUG,
 };
 
+/*
+    @note   Let me explain 'printf' below. Maybe many of you like std::cout but
+            I don't. Typical usage of std::cout is generaly slower. As we want
+            our simulator to be as fast as possible, using std::cout just does
+            not make a lot of sense. TLDR: autor
+*/
 #define LOG(level, format, ...)                                                 \
     do                                                                          \
     {                                                                           \

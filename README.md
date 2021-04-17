@@ -9,7 +9,8 @@ available examples:
 
 1. download and unpack systemc from https://www.accellera.org/downloads/standards/systemc 
 2. set ``SYSTEMC_PATH`` to path to systemc location
-3. follow installation of systemc
+3. follow installation of systemc.
+   > **ATTENTION**: when executing ``../configure`` make sure to add ``CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17"`` as we want to use C++17. Let's embrance new technologies!
 
 ## compiling source code
 

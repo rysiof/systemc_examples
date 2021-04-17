@@ -24,7 +24,9 @@ SOFTWARE.
 
 #include <systemc.h>
 #include "logging.h"
-#include "sc_module_helper.h"
+#include "sc_module_ext.h"
+#include "params.h"
+
 /*!
   This is write interface. We are going to use it to connect source and
   destination modules.
@@ -37,9 +39,10 @@ struct write_if: public sc_core::sc_interface
 struct source: sc_module_ext
 {
   SC_HAS_PROCESS(source);
-  source(const sc_module_name& name) :
+  source(const sc_module_name& name, const module_params& params) :
     sc_module_ext(name),
-    m_port("output") // note: m_port.name() will be $name + "." + "output"
+    m_port("output"), // note: m_port.name() will be $name + "." + "output"
+    m_period(params.get<sc_time>("thread_period"))
   {
     SC_THREAD(thread);
     // need to register if we want later to utilize sc_module_ext API
@@ -52,11 +55,12 @@ struct source: sc_module_ext
     {
       sc_dt::sc_unsigned u; u = idx++;
       m_port->nb_write(u);
-      wait(10, SC_NS);
+      wait(m_period);
     }
   }
 private:
   sc_port<write_if> m_port;
+  sc_time m_period;
 };
 
 /*!
@@ -66,8 +70,8 @@ private:
 struct write_if_impl: public write_if
 {
 public:
-  write_if_impl(sc_event& event, sc_dt::sc_unsigned& value) :
-    m_event(event), m_value(value)
+  write_if_impl(sc_event& event, sc_time write_delay, sc_dt::sc_unsigned& value) :
+    m_event(event), m_write_delay(write_delay), m_value(value)
   {
   }
 
@@ -81,10 +85,11 @@ public:
     m_value = value;
     // As this is sample code we don't care about configurability.
     // For "pro" code you can add some parameters, runtime config etc.
-    m_event.notify(1, SC_NS);
+    m_event.notify(m_write_delay);
   }
 private:
   sc_event& m_event;
+  sc_time m_write_delay;
   sc_dt::sc_unsigned& m_value;
 };
 
@@ -99,9 +104,9 @@ struct input:
   /*!
     @param event Event to be trigerred when nb_write is called from source module.
   */
-  input(const char* name, sc_event& event):
+  input(const char* name, sc_time write_delay, sc_event& event):
     sc_export<write_if>(name),
-    write_if_impl(event, m_value)
+    write_if_impl(event, write_delay, m_value)
   {
     m_value = 0;
     bind(*this);
@@ -113,9 +118,9 @@ struct destination: sc_module_ext
 {
   SC_HAS_PROCESS(destination);
 
-  destination(const sc_module_name& name) :
+  destination(const sc_module_name& name, const module_params& params) :
     sc_module_ext(name),
-    m_export("input", m_event) // note: m_port.name() will be $name + "." + "input"
+    m_export("input", params.get<sc_time>("write_delay"), m_event) // note: m_port.name() will be $name + "." + "input"
   {
     SC_THREAD(thread);
     // need to register if we want later to utilize sc_module_ext API
@@ -136,8 +141,12 @@ private:
 
 int sc_main(int argc, char** argv)
 { 
-  source src("source");
-  destination dst("destination");
+  module_params params;
+  params.add("thread_period", sc_time(10, SC_NS));
+  params.add("write_delay", sc_time(1, SC_NS));
+
+  source src("source", params);
+  destination dst("destination", params);
   // this is the reason why we introduced 'sc_module_ext' - to make out lifes
   // a little easier. Because alternatively we would have to call:
   // src.m_port.bind(dst.m_export);
@@ -147,7 +156,6 @@ int sc_main(int argc, char** argv)
   // additionally we can hide from module user m_port and m_export used in this
   // example. and with getters it will loose its simplicity.
   sc_module_ext::connect_modules(src, "output", dst, "input");
-
   sc_start(100, SC_NS); // runs for 100 ns
   return 0;
 }
