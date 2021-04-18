@@ -7,9 +7,19 @@ available examples:
 
 ## preparing setup
 
-1. download and unpack systemc from https://www.accellera.org/downloads/standards/systemc 
-2. set ``SYSTEMC_PATH`` to path to systemc location
-3. follow installation of systemc.
+1. download and unpack systemc from https://www.accellera.org/downloads/standards/systemc to LOCATION
+2. set ``SYSTEMC_PATH`` to path to LOCATION
+3. goto LOCATION
+4. execute sequence
+   ```bash
+    mkdir objdir
+    cd objdir
+    ../configure CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17"
+    make 
+    make install
+    cd ..
+    rm -rf objdir
+   ```
    > **ATTENTION**: when executing ``../configure`` make sure to add ``CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17"`` as we want to use C++17. Let's embrance new technologies!
 
 ## compiling source code
