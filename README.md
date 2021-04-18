@@ -8,8 +8,21 @@ available examples:
 ## preparing setup
 
 1. download and unpack systemc from https://www.accellera.org/downloads/standards/systemc to LOCATION
-2. set ``SYSTEMC_PATH`` to path to LOCATION
-3. goto LOCATION
+2. set ``SYSTEMC_PATH`` to path to ``LOCATION``
+   ```bash
+   export SYSTEMC_PATH=LOCATION
+   ```
+   for example:
+   ```bash
+   export SYSTEMC_PATH=/home/myuser/systemc-2.3.3
+   ```
+   recomendataion is to set as global variable. example for ubuntu, base on [this](https://help.ubuntu.com/community/EnvironmentVariables#A.2Fetc.2Fprofile.d.2F.2A.sh):
+   ```bash
+   echo export SYSTEMC_PATH=/home/myuser/systemc-2.3.3 > ~/temp.sh
+   sudo cp ~/temp.sh /etc/profile.d/systemc_init.sh
+   rm ~/temp.sh
+   ```
+3. goto ``LOCATION``
 4. execute sequence
    ```bash
     mkdir objdir
